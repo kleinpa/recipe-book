@@ -1,0 +1,25 @@
+name: build
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  push:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            /tmp/bazel-cache
+          key: ${{ runner.os }}-bazelcache-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-bazelcache-
+      - name: Build PDF
+        run: |
+          bazelisk build --disk_cache=/tmp/bazel-cache //:book //:single_pages
+          echo "bazelBin=$(bazelisk info bazel-bin)" >> $GITHUB_ENV
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ${{ env.bazelBin }}/*.pdf
+          if-no-files-found: error

@@ -1,0 +1,39 @@
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[pagestyles]{titlesec}
+\usepackage{array}
+\usepackage{xfrac}
+\usepackage{gensymb}
+\usepackage[quotient-mode=fraction,per-mode=symbol-or-fraction,fraction-function=\sfrac]{siunitx}
+
+\setcounter{secnumdepth}{0}
+\setcounter{tocdepth}{1}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.3em}
+
+\newcommand{\recipe}{\clearpage\section}
+\newcommand{\recipesection}{\subsection}
+
+\newcolumntype{A}[0]{>{\raggedleft\arraybackslash}p{8em}}
+\newcolumntype{B}[0]{>{\raggedright\arraybackslash}p{20em}}
+\newenvironment{ingredients}
+    {
+    \begin{center}
+    \begin{tabular}{ A|B }
+    }
+    {
+    \end{tabular}
+    \end{center}
+    }
+\newcommand{\ingredient}[3]{\SI{#1}{#2} & #3 \\}
+\newcommand{\ingredientAlt}[5]{\SI{#1}{#2} (\SI{#3}{#4}) & #5 \\}
+
+\usepackage[scaled]{helvet}
+\renewcommand\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+\sisetup{detect-all}
+
+\input{info}

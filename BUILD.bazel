@@ -1,0 +1,62 @@
+load("@bazel_latex//:latex.bzl", "latex_document")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+
+recipes = glob(["recipes/**/*.tex"])
+
+recipes_media = glob([recipe.replace(".tex", ".png") for recipe in recipes])
+
+latex_deps = [
+    "common.tex",
+    "info_tex",
+    "@bazel_latex//packages:amsmath",
+    "@bazel_latex//packages:array",
+    "@bazel_latex//packages:babel_english",
+    "@bazel_latex//packages:geometry",
+    "@bazel_latex//packages:graphicx",
+    "@bazel_latex//packages:helvet",
+    "@bazel_latex//packages:hyperref",
+    "@bazel_latex//packages:titlesec",
+    "@bazel_latex//packages:xfrac",
+    "@bazel_latex//packages:gensymb",
+    "@bazel_latex//packages:siunitx",
+]
+
+latex_document(
+    name = "book",
+    srcs = recipes + recipes_media + latex_deps,
+    main = "book.tex",
+)
+
+[
+    genrule(
+        name = recipe.split("/")[-1].replace(".tex", "_single_tex"),
+        outs = [recipe.split("/")[-1].replace(".tex", "_single.tex")],
+        cmd = "./$(location //tools:single) --content {} > \"$@\"".format(recipe),
+        output_to_bindir = True,
+        tools = ["//tools:single"],
+    )
+    for recipe in recipes
+]
+
+[
+    latex_document(
+        name = recipe.split("/")[-1].replace(".tex", ""),
+        srcs = [recipe] + glob([recipe.replace(".tex", ".png")]) + latex_deps,
+        main = recipe.split("/")[-1].replace(".tex", "_single_tex"),
+    )
+    for recipe in recipes
+]
+
+filegroup(
+    name = "single_pages",
+    srcs = [recipe.split("/")[-1].replace(".tex", "") for recipe in recipes],
+)
+
+genrule(
+    name = "info_tex",
+    outs = ["info.tex"],
+    cmd = "./$(location //tools:latex_info)  > $@",
+    stamp = 1,
+    tools = ["//tools:latex_info"],
+    visibility = ["//visibility:public"],
+)
