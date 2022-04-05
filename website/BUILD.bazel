@@ -1,0 +1,33 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+load("@my_deps//:requirements.bzl", "requirement")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+
+py_binary(
+    name = "index_generator",
+    srcs = ["index_generator.py"],
+    data = [":index.html.jinja2"],
+    deps = [
+        requirement("absl-py"),
+        requirement("jinja2"),
+    ],
+)
+
+genrule(
+    name = "index",
+    srcs = ["//:single_pages"],
+    outs = ["index.html"],
+    cmd = "./$(location //website:index_generator) $(locations //:single_pages)  > $@",
+    stamp = 1,
+    tools = ["//website:index_generator"],
+    visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "website",
+    srcs = [
+        ":index",
+        "//:book",
+        "//:single_pages",
+    ],
+    visibility = ["//visibility:public"],
+)

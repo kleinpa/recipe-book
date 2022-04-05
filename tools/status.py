@@ -5,8 +5,8 @@ from subprocess import Popen, PIPE
 from sys import exit
 from datetime import datetime
 
-# datetime object containing current date and time
-now = datetime.now()
+# Use bazel flag --workspace_status_command=./tools/status.py to
+# include stamp data.
 
 
 def run(*cmd):
@@ -23,12 +23,12 @@ def main():
 
     dirty = run("git", "status", "--porcelain")
 
-    scs = run("git", "log", "--pretty=%h")
+    scs = run("git", "log", "-1", "--pretty=%h")
     print("STABLE_scm_shortcleanhash", "-" if dirty else scs)
 
-    date_commit = run("git", "log", "--pretty=%ct")
+    # Timestamp is date of commit unless the repo is dirty
+    date_commit = run("git", "log", "-1", "--pretty=%ct")
     date_now = str(int(datetime.timestamp(datetime.now())))
-    date_now = date_commit
     print("STABLE_change_timestamp", date_now if dirty else date_commit)
 
 

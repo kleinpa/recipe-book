@@ -2,16 +2,6 @@ load("@rules_python//python:defs.bzl", "py_binary")
 load("@my_deps//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "single",
-    srcs = ["single.py"],
-    data = [":single.tex.jinja2"],
-    visibility = ["//visibility:public"],
-    deps = [
-        requirement("absl-py"),
-    ],
-)
-
-py_binary(
     name = "latex_info",
     srcs = ["latex_info.py"],
     visibility = ["//visibility:public"],

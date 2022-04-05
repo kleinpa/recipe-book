@@ -25,15 +25,15 @@ latex_document(
     name = "book",
     srcs = recipes + recipes_media + latex_deps,
     main = "book.tex",
+    visibility = ["//visibility:public"],
 )
 
 [
     genrule(
         name = recipe.split("/")[-1].replace(".tex", "_single_tex"),
         outs = [recipe.split("/")[-1].replace(".tex", "_single.tex")],
-        cmd = "./$(location //tools:single) --content {} > \"$@\"".format(recipe),
+        cmd = "echo \\\\newcommand{{\\\\inner}}{{\\\\input{{{}}}}}\\\\input{{single}} > \"$@\"".format(recipe.replace(".tex", "")),
         output_to_bindir = True,
-        tools = ["//tools:single"],
     )
     for recipe in recipes
 ]
@@ -41,7 +41,7 @@ latex_document(
 [
     latex_document(
         name = recipe.split("/")[-1].replace(".tex", ""),
-        srcs = [recipe] + glob([recipe.replace(".tex", ".png")]) + latex_deps,
+        srcs = [recipe] + ["single.tex"] + glob([recipe.replace(".tex", ".png")]) + latex_deps,
         main = recipe.split("/")[-1].replace(".tex", "_single_tex"),
     )
     for recipe in recipes
@@ -50,6 +50,7 @@ latex_document(
 filegroup(
     name = "single_pages",
     srcs = [recipe.split("/")[-1].replace(".tex", "") for recipe in recipes],
+    visibility = ["//visibility:public"],
 )
 
 genrule(

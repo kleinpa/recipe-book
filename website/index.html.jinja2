@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ title }}</title>
+</head>
+<body>
+ 	<h1>{{ title }}</h1>
+	<ul>
+		{% for recipe in recipes %}
+			<li><a href="{{ recipe.url }}">{{ recipe.name }}</a>
+		{% endfor %}
+	</ul>
+	<span style="opacity: 0.3; font-size: 80%">
+	    last modified {{ date.strftime("%B %-d, %Y") }} {{ version }}
+	</span>
+</body>
+</html>
