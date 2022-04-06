@@ -1,0 +1,3 @@
+[build]
+  publish = "dist"
+  command = "curl -sLo /tmp/bazelisk https://github.com/bazelbuild/bazelisk/releases/download/v1.11.0/bazelisk-linux-amd64 && chmod +x /tmp/bazelisk && /tmp/bazelisk build //website && mkdir dist && tar xvf bazel-bin/website/website.tar -C dist"
