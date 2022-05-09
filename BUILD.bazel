@@ -1,5 +1,4 @@
 load("@bazel_latex//:latex.bzl", "latex_document")
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 recipes = glob(["recipes/**/*.tex"])
 
@@ -32,7 +31,10 @@ latex_document(
     genrule(
         name = recipe.split("/")[-1].replace(".tex", "_single_tex"),
         outs = [recipe.split("/")[-1].replace(".tex", "_single.tex")],
-        cmd = "echo \\\\newcommand{{\\\\inner}}{{\\\\input{{{}}}}}\\\\input{{single}} > \"$@\"".format(recipe.replace(".tex", "")),
+        cmd = "echo \\\\newcommand{{\\\\inner}}{{\\\\input{{{}}}}}\\\\newcommand{{\\\\name}}{{{}}}\\\\input{{single}} > \"$@\"".format(
+            recipe.replace(".tex", ""),
+            recipe.split("/")[-1].replace(".tex", ""),
+        ),
         output_to_bindir = True,
     )
     for recipe in recipes
