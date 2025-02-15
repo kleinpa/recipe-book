@@ -1,4 +1,5 @@
 load("@bazel_latex//:latex.bzl", "latex_document")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 compile_pip_requirements(
@@ -17,7 +18,10 @@ exports_files([
 
 recipes = glob(["recipes/**/*.tex"])
 
-recipes_media = glob([recipe.replace(".tex", ".png") for recipe in recipes])
+recipes_media = glob(
+    [recipe.replace(".tex", ".png") for recipe in recipes],
+    allow_empty = True,
+)
 
 latex_deps = [
     "common.tex",
@@ -58,7 +62,10 @@ latex_document(
 [
     latex_document(
         name = recipe.split("/")[-1].replace(".tex", ""),
-        srcs = [recipe] + ["single.tex"] + glob([recipe.replace(".tex", ".png")]) + latex_deps,
+        srcs = [recipe] + ["single.tex"] + glob(
+            [recipe.replace(".tex", ".png")],
+            allow_empty = True,
+        ) + latex_deps,
         main = recipe.split("/")[-1].replace(".tex", "_single_tex"),
     )
     for recipe in recipes
@@ -77,4 +84,12 @@ genrule(
     stamp = 1,
     tools = ["//tools:latex_info"],
     visibility = ["//visibility:public"],
+)
+
+build_test(
+    name = "build_test",
+    targets = [
+        ":book",
+        ":single_pages",
+    ],
 )

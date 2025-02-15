@@ -1,15 +1,24 @@
 module(name = "recipe_book", version = "1.0")
 
-bazel_dep(name = "rules_python", version = "0.36.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "platforms", version = "0.0.11")
+bazel_dep(name = "rules_python", version = "1.0.0")
+bazel_dep(name = "bazel_latex")
+
+git_override(
+    module_name = "bazel_latex",
+    remote = "https://github.com/ProdriveTechnologies/bazel-latex.git",
+    commit = "227b02f346c1dd0098d32b5bcb1ef874dd367e2a",
+)
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(python_version = "3.12", is_default = True)
+python.toolchain(python_version = "3.11", is_default = True)
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
-    hub_name = "pip",
-    python_version = "3.12",
+    hub_name = "pip_recipe_book",
+    python_version = "3.11",
     requirements_lock = "//:requirements_lock.txt",
     requirements_windows = "//:requirements_windows.txt",
 )
-use_repo(pip, "pip")
+use_repo(pip, "pip_recipe_book")
