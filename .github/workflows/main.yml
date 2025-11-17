@@ -20,7 +20,7 @@ jobs:
         run: |
           bazelisk build --disk_cache=/tmp/bazel-cache //:book //:single_pages
           echo "bazelBin=$(bazelisk info bazel-bin)" >> $GITHUB_ENV
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           path: ${{ env.bazelBin }}/*.pdf
           if-no-files-found: error
