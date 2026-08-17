@@ -23,11 +23,13 @@ def main(argv):
     volatilestatus = dict(
         status_line(s) for s in open(FLAGS.volatilestatus).readlines())
 
-    date1 = datetime.datetime.fromtimestamp(
-        int(stablestatus["STABLE_change_timestamp"]))
+    change_timestamp = stablestatus.get("STABLE_change_timestamp")
+    date1 = (
+        datetime.datetime.fromtimestamp(int(change_timestamp))
+        if change_timestamp else datetime.datetime.now())
     print(f"\\year={date1.year}\\month={date1.month}\\day={date1.day}")
     print(
-        f"\\newcommand{{\\scmhash}}{{{stablestatus['STABLE_scm_shortcleanhash']}}}"
+        f"\\newcommand{{\\scmhash}}{{{stablestatus.get('STABLE_scm_shortcleanhash', '')}}}"
     )
 
 

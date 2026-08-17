@@ -1,14 +1,19 @@
 module(name = "recipe_book", version = "1.0")
 
-bazel_dep(name = "bazel_skylib", version = "1.8.2")
-bazel_dep(name = "platforms", version = "1.0.0")
-bazel_dep(name = "rules_python", version = "1.7.0")
+bazel_dep(name = "bazel_skylib", version = "1.9.2")
+bazel_dep(name = "platforms", version = "1.1.0")
+bazel_dep(name = "rules_python", version = "2.3.1")
 bazel_dep(name = "bazel_latex")
+
+# bazel_latex pins rules_foreign_cc 0.12.0, whose toolchains.bzl is
+# incompatible with this Bazel version. Bumping it here forces MVS to
+# pick this newer version across the whole module graph instead.
+bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
 
 git_override(
     module_name = "bazel_latex",
-    remote = "https://github.com/ProdriveTechnologies/bazel-latex.git",
-    commit = "c552d5bd09e4e9e49040ede60dd97720acb1cbb7",
+    remote = "https://github.com/kleinpa/rules_latex.git",
+    commit = "246fc27b93b5918a5b2f4dad0c0d9c4da6256522",
 )
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
@@ -19,6 +24,5 @@ pip.parse(
     hub_name = "pip_recipe_book",
     python_version = "3.11",
     requirements_lock = "//:requirements_lock.txt",
-    requirements_windows = "//:requirements_windows.txt",
 )
 use_repo(pip, "pip_recipe_book")

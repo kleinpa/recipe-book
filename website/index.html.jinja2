@@ -5,13 +5,19 @@
 </head>
 <body>
  	<h1>{{ title }}</h1>
+	{% for part in parts %}
+	<h2>{{ part.name }}</h2>
 	<ul>
-		{% for recipe in recipes %}
-			<li><a href="{{ recipe.url }}">{{ recipe.name }}</a>
+		{% for recipe in part.recipes %}
+			<li><a href="{{ recipe.url }}">{{ recipe.title }}</a>
 		{% endfor %}
 	</ul>
+	{% endfor %}
+	{% if book_pdf_url %}
+	<p><a href="{{ book_pdf_url }}">{{ book_pdf_url }}</a></p>
+	{% endif %}
 	<span style="opacity: 0.3; font-size: 80%">
-	    last modified {{ date.strftime("%B %-d, %Y") }} {{ version }}
+	    last modified {{ date_str }} {{ version }}
 	</span>
 </body>
 </html>

@@ -1,11 +1,44 @@
 load("@pip_recipe_book//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_binary(
     name = "latex_info",
     srcs = ["latex_info.py"],
     visibility = ["//visibility:public"],
     deps = [
+        requirement("absl-py"),
+    ],
+)
+
+py_library(
+    name = "cook_common",
+    srcs = ["cook_common.py"],
+)
+
+# Pure rendering logic (no CLI) -- cook_gen below is the only entry point,
+# so a .tex or .html render doesn't require its own absl flags/main.
+py_library(
+    name = "cook_to_latex",
+    srcs = ["cook_to_latex.py"],
+    deps = [":cook_common"],
+)
+
+py_library(
+    name = "cook_to_html",
+    srcs = ["cook_to_html.py"],
+    deps = [":cook_common"],
+)
+
+# Renders .tex/.html/manifest from one .cook file in a single process,
+# parsing it once instead of running two separate tools per recipe.
+py_binary(
+    name = "cook_gen",
+    srcs = ["cook_gen.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cook_common",
+        ":cook_to_html",
+        ":cook_to_latex",
         requirement("absl-py"),
     ],
 )

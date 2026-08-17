@@ -1,0 +1,20 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/base:trixie",
+  "features": {
+    "ghcr.io/devcontainers-community/features/bazel:1": {
+      "bazelisk_version": "latest",
+      "buildifier_version": "latest"
+    },
+    "ghcr.io/devcontainers-community/npm-features/prettier:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "BazelBuild.vscode-bazel",
+        "esbenp.prettier-vscode",
+        "ms-dotnettools.csdevkit"
+      ]
+    }
+  }
+}

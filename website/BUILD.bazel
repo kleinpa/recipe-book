@@ -14,9 +14,13 @@ py_binary(
 
 genrule(
     name = "index",
-    srcs = ["//:single_pages"],
+    srcs = [
+        "//:recipe_manifests",
+        "//:book",
+        "//:book.tex",
+    ],
     outs = ["index.html"],
-    cmd = "./$(location //website:index_generator) $(locations //:single_pages)  > $@",
+    cmd = "./$(location //website:index_generator) $(locations //:recipe_manifests) $(location //:book) $(location //:book.tex) > $@",
     stamp = 1,
     tools = ["//website:index_generator"],
     visibility = ["//visibility:public"],
@@ -28,6 +32,17 @@ pkg_tar(
         ":index",
         "//:book",
         "//:single_pages",
+        "//:recipe_pages",
     ],
     visibility = ["//visibility:public"],
+)
+
+# `bazel run //website:preview` to browse the site locally.
+py_binary(
+    name = "preview",
+    srcs = ["preview.py"],
+    data = [":website"],
+    deps = [
+        requirement("absl-py"),
+    ],
 )
