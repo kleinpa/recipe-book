@@ -1,6 +1,6 @@
 """Renders a parsed .cook Recipe to a standalone HTML page.
 
-Pure rendering logic, no CLI -- see cook_gen.py for the command-line tool.
+Pure rendering logic, no CLI -- see cook_gen_html.py for the command-line tool.
 """
 
 import html
@@ -32,6 +32,9 @@ table.ingredients {
 }
 table.ingredients td { padding: 0.15em 0.8em; vertical-align: top; }
 table.ingredients td.amount { width: 11em; text-align: right; white-space: nowrap; border-right: 1px solid #000; }
+@media (max-width: 30em) {
+  table.ingredients td.amount { width: 35%; white-space: normal; }
+}
 sup a { text-decoration: none; }
 footer { margin-top: 3em; font-size: 0.8em; opacity: 0.5; }
 """

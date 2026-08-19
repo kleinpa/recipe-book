@@ -1,6 +1,6 @@
 """Renders a parsed .cook Recipe to the LaTeX macros defined in common.tex.
 
-Pure rendering logic, no CLI -- see cook_gen.py for the command-line tool.
+Pure rendering logic, no CLI -- see cook_gen_tex.py for the command-line tool.
 """
 
 import re

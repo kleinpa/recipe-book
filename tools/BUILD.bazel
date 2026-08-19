@@ -3,7 +3,10 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_binary(
     name = "latex_info",
-    srcs = ["latex_info.py"],
+    srcs = [
+        "__init__.py",
+        "latex_info.py",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         requirement("absl-py"),
@@ -15,30 +18,50 @@ py_library(
     srcs = ["cook_common.py"],
 )
 
-# Pure rendering logic (no CLI) -- cook_gen below is the only entry point,
-# so a .tex or .html render doesn't require its own absl flags/main.
+# Pure rendering logic (no CLI) -- cook_gen_tex below is the entry point,
+# so a .tex render doesn't require its own absl flags/main.
 py_library(
     name = "cook_to_latex",
     srcs = ["cook_to_latex.py"],
     deps = [":cook_common"],
 )
 
+# Pure rendering logic (no CLI) -- cook_gen_html below is the entry point,
+# so an .html render doesn't require its own absl flags/main.
 py_library(
     name = "cook_to_html",
     srcs = ["cook_to_html.py"],
     deps = [":cook_common"],
 )
 
-# Renders .tex/.html/manifest from one .cook file in a single process,
-# parsing it once instead of running two separate tools per recipe.
+# Separate binaries (rather than one combined tool) so that a Bazel action
+# generating .tex doesn't get invalidated by html-only changes, and vice
+# versa -- the downstream LaTeX/PDF build is slow, so it shouldn't rebuild
+# for html-only changes. This costs an extra .cook parse per recipe.
 py_binary(
-    name = "cook_gen",
-    srcs = ["cook_gen.py"],
+    name = "cook_gen_tex",
+    srcs = [
+        "__init__.py",
+        "cook_gen_tex.py",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":cook_common",
+        ":cook_to_latex",
+        requirement("absl-py"),
+    ],
+)
+
+py_binary(
+    name = "cook_gen_html",
+    srcs = [
+        "__init__.py",
+        "cook_gen_html.py",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         ":cook_common",
         ":cook_to_html",
-        ":cook_to_latex",
         requirement("absl-py"),
     ],
 )

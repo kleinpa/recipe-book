@@ -1,4 +1,7 @@
-module(name = "recipe_book", version = "1.0")
+module(
+    name = "recipe_book",
+    version = "1.0",
+)
 
 bazel_dep(name = "bazel_skylib", version = "1.9.2")
 bazel_dep(name = "platforms", version = "1.1.0")
@@ -12,12 +15,18 @@ bazel_dep(name = "rules_foreign_cc", version = "0.15.1")
 
 git_override(
     module_name = "bazel_latex",
-    remote = "https://github.com/kleinpa/rules_latex.git",
     commit = "246fc27b93b5918a5b2f4dad0c0d9c4da6256522",
+    remote = "https://github.com/kleinpa/rules_latex.git",
 )
 
 python = use_extension("@rules_python//python/extensions:python.bzl", "python")
-python.toolchain(python_version = "3.11", is_default = True)
+python.toolchain(
+    is_default = True,
+    python_version = "3.11",
+)
+
+config = use_extension("@rules_python//python/extensions:config.bzl", "config")
+config.explicit_init_py(default = True)
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(

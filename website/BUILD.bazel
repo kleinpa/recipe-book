@@ -4,7 +4,10 @@ load("@rules_python//python:defs.bzl", "py_binary")
 
 py_binary(
     name = "index_generator",
-    srcs = ["index_generator.py"],
+    srcs = [
+        "__init__.py",
+        "index_generator.py",
+    ],
     data = [":index.html.jinja2"],
     deps = [
         requirement("absl-py"),
@@ -40,7 +43,10 @@ pkg_tar(
 # `bazel run //website:preview` to browse the site locally.
 py_binary(
     name = "preview",
-    srcs = ["preview.py"],
+    srcs = [
+        "__init__.py",
+        "preview.py",
+    ],
     data = [":website"],
     deps = [
         requirement("absl-py"),
