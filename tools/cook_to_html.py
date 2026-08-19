@@ -26,10 +26,12 @@ h2 { font-size: 1.1em; margin-top: 1.6em; }
 p { margin: 1em 0; }
 table.ingredients {
   border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
   margin: 0.8em 0 1.2em;
 }
 table.ingredients td { padding: 0.15em 0.8em; vertical-align: top; }
-table.ingredients td.amount { text-align: right; white-space: nowrap; border-right: 1px solid #000; }
+table.ingredients td.amount { width: 11em; text-align: right; white-space: nowrap; border-right: 1px solid #000; }
 sup a { text-decoration: none; }
 footer { margin-top: 3em; font-size: 0.8em; opacity: 0.5; }
 """
